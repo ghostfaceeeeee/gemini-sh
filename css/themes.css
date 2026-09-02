@@ -1,0 +1,39 @@
+/* ============================= THEMES ============================= */
+/* Overrides the base tokens from variables.css (which are the "Mocha"
+   defaults) when <html data-theme="..."> is set. Explicit [data-theme="mocha"]
+   block below is a no-op duplicate of the defaults — kept for clarity/symmetry. */
+
+:root[data-theme="mocha"]{
+  --crust:#11111b; --mantle:#181825; --base:#1e1e2e;
+  --surface0:#313244; --surface1:#45475a; --surface2:#585b70;
+  --overlay0:#6c7086; --overlay1:#7f849c; --overlay2:#9399b2;
+  --text:#cdd6f4; --subtext0:#a6adc8; --subtext1:#bac2de;
+  --mauve:#cba6f7; --lavender:#b4befe; --blue:#89b4fa;
+  --green:#a6e3a1; --peach:#fab387; --yellow:#f9e2af;
+  --red:#f38ba8; --teal:#94e2d5; --sapphire:#74c7ec; --pink:#f5c2e7;
+  --font:'JetBrains Mono','Cascadia Code','Fira Code',ui-monospace,Consolas,monospace;
+}
+
+/* ---------- Nord: cool blues / arctic slate ---------- */
+:root[data-theme="nord"]{
+  --crust:#242933; --mantle:#2e3440; --base:#3b4252;
+  --surface0:#434c5e; --surface1:#4c566a; --surface2:#5e6a82;
+  --overlay0:#7b88a1; --overlay1:#8fa1b3; --overlay2:#a3b3c2;
+  --text:#eceff4; --subtext0:#d8dee9; --subtext1:#e5e9f0;
+  --mauve:#b48ead; --lavender:#8fbcbb; --blue:#81a1c1;
+  --green:#a3be8c; --peach:#d08770; --yellow:#ebcb8b;
+  --red:#bf616a; --teal:#88c0d0; --sapphire:#5e81ac; --pink:#b48ead;
+  --font:'Fira Code','JetBrains Mono',ui-monospace,Consolas,monospace;
+}
+
+/* ---------- Gruvbox: warm retro orange / brown ---------- */
+:root[data-theme="gruvbox"]{
+  --crust:#1d2021; --mantle:#282828; --base:#32302f;
+  --surface0:#3c3836; --surface1:#504945; --surface2:#665c54;
+  --overlay0:#7c6f64; --overlay1:#928374; --overlay2:#a89984;
+  --text:#ebdbb2; --subtext0:#d5c4a1; --subtext1:#bdae93;
+  --mauve:#d3869b; --lavender:#fe8019; --blue:#83a598;
+  --green:#b8bb26; --peach:#fe8019; --yellow:#fabd2f;
+  --red:#fb4934; --teal:#8ec07c; --sapphire:#458588; --pink:#d3869b;
+  --font:'IBM Plex Mono','JetBrains Mono',ui-monospace,Consolas,monospace;
+}

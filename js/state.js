@@ -6,7 +6,7 @@
 export const MODEL = "gemini-3.7-flash";
 
 export const state = {
-  settings: { apiKey: "", displayName: "User" },
+  settings: { apiKey: "", displayName: "User", theme: "mocha" },
   conversations: [],
   activeId: null,
   isStreaming: false,

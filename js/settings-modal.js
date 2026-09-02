@@ -1,14 +1,24 @@
 /* ============================= SETTINGS MODAL ============================= */
-// Only the API key is configurable — the model is fixed (see js/state.js).
+// Display name, theme, and API key — the model is fixed (see js/state.js).
 import { state } from './state.js';
 import { dom } from './dom.js';
 import { persistSettings, persistConversations } from './storage.js';
 import { renderSidebar, renderMessages } from './render.js';
 import { showToast } from './utils.js';
+import { applyTheme, DEFAULT_THEME } from './theme.js';
+
+function highlightActiveTheme(){
+  var buttons = dom.themePicker.querySelectorAll('.theme-swatch');
+  for (var i = 0; i < buttons.length; i++){
+    var btn = buttons[i];
+    btn.classList.toggle('theme-swatch--active', btn.getAttribute('data-theme') === (state.settings.theme || DEFAULT_THEME));
+  }
+}
 
 export function openSettingsModal(){
   dom.displayNameInput.value = state.settings.displayName || '';
   dom.apiKeyInput.value = state.settings.apiKey || '';
+  highlightActiveTheme();
   dom.modalBackdrop.classList.add('show');
 }
 
@@ -21,6 +31,16 @@ export function initSettingsModal(){
   dom.modalClose.addEventListener('click', closeSettingsModal);
   dom.modalBackdrop.addEventListener('click', function(e){
     if (e.target === dom.modalBackdrop) closeSettingsModal();
+  });
+
+  // Theme swatches apply immediately (no need to hit Save) and persist right away.
+  dom.themePicker.addEventListener('click', function(e){
+    var btn = e.target.closest('.theme-swatch');
+    if (!btn) return;
+    var themeId = btn.getAttribute('data-theme');
+    state.settings.theme = applyTheme(themeId);
+    persistSettings();
+    highlightActiveTheme();
   });
 
   dom.toggleKeyVisibility.addEventListener('click', function(){
@@ -45,11 +65,13 @@ export function initSettingsModal(){
     if (!confirm('Hapus semua chat dan API key yang tersimpan? Tidak bisa dibatalkan.')) return;
     state.conversations = [];
     state.activeId = null;
-    state.settings = { apiKey: '', displayName: 'User' };
+    state.settings = { apiKey: '', displayName: 'User', theme: DEFAULT_THEME };
+    applyTheme(DEFAULT_THEME);
     persistConversations();
     persistSettings();
     dom.displayNameInput.value = '';
     dom.apiKeyInput.value = '';
+    highlightActiveTheme();
     renderSidebar();
     renderMessages();
     closeSettingsModal();

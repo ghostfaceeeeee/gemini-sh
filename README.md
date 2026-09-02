@@ -8,6 +8,7 @@ Klien chat berbasis web untuk Google Gemini API, dengan tampilan terminal ala Ca
 - Riwayat percakapan (buat, pilih, hapus) tersimpan otomatis
 - Model tunggal (`gemini-3.7-flash`, di-hardcode di `js/state.js` — tanpa dropdown pilihan model)
 - Nama tampilan bisa diganti sendiri lewat Settings (tersimpan lokal, bukan akun/login sungguhan)
+- 3 tema (Mocha, Nord, Gruvbox) — warna & font berubah, dipilih dan diterapkan langsung lewat Settings
 - Render Markdown ringan: bold, italic, inline code, code block dengan tombol copy, list, dan link
 - Regenerate respons terakhir & stop generating di tengah stream
 - Copy pesan, auto-resize input, auto-scroll, dan sidebar responsif (mobile-friendly)

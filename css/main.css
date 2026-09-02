@@ -1,6 +1,7 @@
 /* ============================= ENTRY STYLESHEET ============================= */
 /* Imports all component styles in a deliberate cascade order. */
 @import url("variables.css");
+@import url("themes.css");
 @import url("reset.css");
 @import url("layout.css");
 @import url("sidebar.css");

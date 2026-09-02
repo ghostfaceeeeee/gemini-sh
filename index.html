@@ -4,9 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>~/gemini.sh</title>
+<script>
+// Apply the saved theme before first paint to avoid a flash of the
+// default (Mocha) theme when the user has picked Nord/Gruvbox.
+(function(){
+  try {
+    var raw = localStorage.getItem('gemini-sh:settings');
+    if (raw){
+      var s = JSON.parse(raw);
+      if (s && s.theme && s.theme !== 'mocha'){
+        document.documentElement.setAttribute('data-theme', s.theme);
+      }
+    }
+  } catch (e) {}
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
@@ -79,6 +94,27 @@
       <button class="icon-btn" id="modalClose"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div class="modal__body">
+      <div class="field">
+        <label>Tema</label>
+        <div class="theme-picker" id="themePicker">
+          <button class="theme-swatch" type="button" data-theme="mocha">
+            <span class="theme-swatch__dots"><span style="background:#cba6f7"></span><span style="background:#89b4fa"></span><span style="background:#a6e3a1"></span></span>
+            <span class="theme-swatch__label">Mocha</span>
+          </button>
+          <button class="theme-swatch" type="button" data-theme="nord">
+            <span class="theme-swatch__dots"><span style="background:#88c0d0"></span><span style="background:#81a1c1"></span><span style="background:#a3be8c"></span></span>
+            <span class="theme-swatch__label">Nord</span>
+          </button>
+          <button class="theme-swatch" type="button" data-theme="gruvbox">
+            <span class="theme-swatch__dots"><span style="background:#fe8019"></span><span style="background:#fabd2f"></span><span style="background:#b8bb26"></span></span>
+            <span class="theme-swatch__label">Gruvbox</span>
+          </button>
+        </div>
+        <p class="hint">Ganti warna &amp; font aplikasi. Diterapkan langsung dan tersimpan otomatis.</p>
+      </div>
+
+      <div class="modal__divider"></div>
+
       <div class="field">
         <label for="displayNameInput">Nama tampilan</label>
         <input type="text" id="displayNameInput" class="text-input" placeholder="User" maxlength="24">

@@ -9,6 +9,7 @@ import { initSidebarMobile } from './sidebar-mobile.js';
 import { initInputBar } from './input-bar.js';
 import { initSettingsModal, openSettingsModal } from './settings-modal.js';
 import { initEvents } from './events.js';
+import { applyTheme, DEFAULT_THEME } from './theme.js';
 
 function refreshInputAvailability(){
   var ready = !!state.settings.apiKey;
@@ -27,6 +28,7 @@ function init(){
   initEvents();
 
   loadState().then(function(){
+    state.settings.theme = applyTheme(state.settings.theme || DEFAULT_THEME);
     renderSidebar();
     renderMessages();
     refreshInputAvailability();
