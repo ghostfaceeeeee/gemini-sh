@@ -3,8 +3,10 @@
 // hosting (Netlify, GitHub Pages, your own server, etc). Wrapped in Promises
 // so the rest of the app (which awaits/.then()s these) doesn't need to change.
 import { state } from './state.js';
+import { showToast } from './utils.js';
 
 var PREFIX = 'gemini-sh:';
+var warnedQuota = false; // avoid spamming a toast on every failed autosave
 
 export function safeGet(key){
   try {
@@ -27,7 +29,17 @@ export function safeSet(key, value){
 }
 
 export function persistSettings(){ safeSet('settings', JSON.stringify(state.settings)); }
-export function persistConversations(){ safeSet('conversations', JSON.stringify(state.conversations)); }
+
+export function persistConversations(){
+  safeSet('conversations', JSON.stringify(state.conversations)).then(function(ok){
+    if (!ok && !warnedQuota){
+      warnedQuota = true;
+      showToast('Gagal menyimpan chat — penyimpanan browser penuh (lampiran mungkin terlalu besar)', 'error');
+    } else if (ok) {
+      warnedQuota = false;
+    }
+  });
+}
 
 export function loadState(){
   return Promise.all([safeGet('settings'), safeGet('conversations')]).then(function(res){

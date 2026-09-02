@@ -8,7 +8,7 @@ export function currentModelId(){
   return MODEL;
 }
 
-// Turns our locally-stored conversation (array of {role:'user'|'model', text})
+// Turns our locally-stored conversation (array of {role, text, attachments?})
 // into the Interactions API's stateless `input` step array. We manage history
 // on the client (matches how this app already stores conversations locally),
 // so every request sends `store: false` and the full turn history — no
@@ -16,7 +16,22 @@ export function currentModelId(){
 function buildInteractionsInput(messages){
   return messages.map(function(m){
     if (m.role === 'user'){
-      return { type: 'user_input', content: m.text };
+      var atts = m.attachments || [];
+      if (!atts.length){
+        return { type: 'user_input', content: m.text };
+      }
+      var blocks = [];
+      if (m.text) blocks.push({ type: 'text', text: m.text });
+      atts.forEach(function(a){
+        if (a.kind === 'image'){
+          blocks.push({ type: 'image', data: a.data, mime_type: a.mime });
+        } else if (a.kind === 'document'){
+          blocks.push({ type: 'document', data: a.data, mime_type: a.mime });
+        } else if (a.kind === 'text'){
+          blocks.push({ type: 'text', text: '--- file: ' + a.name + ' ---\n' + a.text + '\n--- end file ---' });
+        }
+      });
+      return { type: 'user_input', content: blocks };
     }
     return { type: 'model_output', content: [{ type: 'text', text: m.text }] };
   });

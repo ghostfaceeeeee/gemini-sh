@@ -28,6 +28,9 @@ export const dom = {
   input: $('input'),
   sendBtn: $('sendBtn'),
   inputShell: $('inputShell'),
+  attachBtn: $('attachBtn'),
+  fileInput: $('fileInput'),
+  attachmentsPreview: $('attachmentsPreview'),
 
   // Settings modal
   modalBackdrop: $('modalBackdrop'),

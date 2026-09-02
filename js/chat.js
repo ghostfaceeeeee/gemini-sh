@@ -8,6 +8,7 @@ import { persistConversations } from './storage.js';
 import { streamGemini } from './gemini-api.js';
 import { openSettingsModal } from './settings-modal.js';
 import { autoResize } from './input-bar.js';
+import { clearAttachments } from './attachments.js';
 
 export function updateSendUI(){
   dom.sendBtn.classList.toggle('send-btn--stop', state.isStreaming);
@@ -62,7 +63,8 @@ export function runAssistantTurn(convo){
 
 export function handleSend(){
   var text = dom.input.value.trim();
-  if (!text || state.isStreaming) return;
+  var attachments = state.pendingAttachments.slice();
+  if ((!text && !attachments.length) || state.isStreaming) return;
 
   if (!state.settings.apiKey){
     openSettingsModal();
@@ -71,11 +73,13 @@ export function handleSend(){
   }
 
   var convo = getActiveConversation();
-  if (!convo) convo = createConversation(text);
+  var titleSource = text || (attachments[0] && attachments[0].name) || 'File';
+  if (!convo) convo = createConversation(titleSource);
 
-  convo.messages.push({ id: uid(), role: 'user', text: text, ts: Date.now() });
+  convo.messages.push({ id: uid(), role: 'user', text: text, ts: Date.now(), attachments: attachments });
   dom.input.value = '';
   autoResize();
+  clearAttachments();
   renderSidebar();
   renderMessages();
   persistConversations();

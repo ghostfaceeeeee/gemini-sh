@@ -24,6 +24,20 @@ export function renderSidebar(){
 }
 
 /* ---------- Messages ---------- */
+function attachmentsHtml(attachments){
+  if (!attachments || !attachments.length) return '';
+  var items = attachments.map(function(a){
+    if (a.kind === 'image'){
+      return '<a class="msg-attach msg-attach--image" href="data:' + a.mime + ';base64,' + a.data + '" target="_blank" rel="noopener noreferrer">' +
+        '<img src="data:' + a.mime + ';base64,' + a.data + '" alt="' + escapeHtml(a.name) + '" loading="lazy" decoding="async"></a>';
+    }
+    var icon = a.kind === 'document' ? '📄' : '📝';
+    return '<div class="msg-attach msg-attach--file" title="' + escapeHtml(a.name) + '">' +
+      '<span>' + icon + '</span><span class="msg-attach__name">' + escapeHtml(a.name) + '</span></div>';
+  }).join('');
+  return '<div class="message__attachments">' + items + '</div>';
+}
+
 function messageNode(msg, convo){
   var isUser = msg.role === 'user';
   var isError = msg.role === 'error';
@@ -34,8 +48,8 @@ function messageNode(msg, convo){
 
   var isLastModel = !isUser && !isError && convo.messages[convo.messages.length - 1] === msg;
   var showCursor = state.isStreaming && isLastModel;
-  var content = renderMarkdown(msg.text) + (showCursor ? '<span class="cursor-blink">▊</span>' : '');
-  if (!msg.text && showCursor) content = '<span class="cursor-blink">▊</span>';
+  var content = attachmentsHtml(msg.attachments) + renderMarkdown(msg.text) + (showCursor ? '<span class="cursor-blink">▊</span>' : '');
+  if (!msg.text && showCursor) content = attachmentsHtml(msg.attachments) + '<span class="cursor-blink">▊</span>';
 
   var actions = '<div class="message__actions">' +
     '<button class="icon-btn copy-msg" data-copy-id="' + msg.id + '" title="Copy">' +
@@ -84,11 +98,24 @@ export function renderMessages(){
   maybeAutoScroll(true);
 }
 
+// Streaming can emit many small chunks per second. Re-parsing Markdown and
+// touching the DOM on every single chunk is wasteful — coalesce updates to
+// at most once per animation frame (~60/s cap) instead.
+var streamRaf = null;
+var streamPendingMsg = null;
+
 export function updateStreamingMessageDOM(msg){
-  var node = dom.messages.querySelector('[data-msg-id="' + msg.id + '"] .message__content');
-  if (node){
-    var content = renderMarkdown(msg.text);
-    node.innerHTML = content + '<span class="cursor-blink">▊</span>';
-    maybeAutoScroll(false);
-  }
+  streamPendingMsg = msg;
+  if (streamRaf !== null) return;
+  streamRaf = requestAnimationFrame(function(){
+    streamRaf = null;
+    var m = streamPendingMsg;
+    if (!m) return;
+    var node = dom.messages.querySelector('[data-msg-id="' + m.id + '"] .message__content');
+    if (node){
+      var content = renderMarkdown(m.text);
+      node.innerHTML = content + '<span class="cursor-blink">▊</span>';
+      maybeAutoScroll(false);
+    }
+  });
 }

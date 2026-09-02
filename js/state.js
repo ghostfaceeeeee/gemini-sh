@@ -10,5 +10,6 @@ export const state = {
   conversations: [],
   activeId: null,
   isStreaming: false,
-  abortController: null
+  abortController: null,
+  pendingAttachments: [] // files staged for the next message — never persisted
 };

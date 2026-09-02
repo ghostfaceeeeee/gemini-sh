@@ -10,6 +10,7 @@ import { initInputBar } from './input-bar.js';
 import { initSettingsModal, openSettingsModal } from './settings-modal.js';
 import { initEvents } from './events.js';
 import { applyTheme, DEFAULT_THEME } from './theme.js';
+import { initAttachments } from './attachments.js';
 
 function refreshInputAvailability(){
   var ready = !!state.settings.apiKey;
@@ -25,6 +26,7 @@ function init(){
   initSidebarMobile();
   initInputBar(handleSend, stopGenerating);
   initSettingsModal();
+  initAttachments();
   initEvents();
 
   loadState().then(function(){

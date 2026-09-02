@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>~/gemini.sh</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%2311111b'/%3E%3Ctext x='12' y='17' font-size='14' text-anchor='middle' fill='%23cba6f7' font-family='monospace'%3E%3E_%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#11111b">
 <script>
 // Apply the saved theme before first paint to avoid a flash of the
 // default (Mocha) theme when the user has picked Nord/Gruvbox.
@@ -74,13 +76,18 @@
     </div>
 
     <div class="input-bar">
+      <div class="attachments-preview" id="attachmentsPreview"></div>
       <div class="input-shell" id="inputShell">
+        <button class="icon-btn attach-btn" id="attachBtn" type="button" title="Lampirkan file">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        </button>
+        <input type="file" id="fileInput" multiple accept="image/*,application/pdf,.txt,.md,.csv,.json,.js,.ts,.jsx,.tsx,.py,.html,.css,.java,.c,.cpp,.h,.go,.rs,.sh,.yml,.yaml,.xml,.log,.ini,.conf" hidden>
         <textarea id="input" rows="1" placeholder="Ketik pesan..."></textarea>
         <button class="send-btn" id="sendBtn" title="Send">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
         </button>
       </div>
-      <div class="input-hint"><span><kbd>Enter</kbd> kirim</span><span><kbd>Shift+Enter</kbd> baris baru</span></div>
+      <div class="input-hint"><span><kbd>Enter</kbd> kirim</span><span><kbd>Shift+Enter</kbd> baris baru</span><span>📎 gambar / PDF / teks</span></div>
     </div>
   </main>
 

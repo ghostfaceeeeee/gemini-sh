@@ -17,7 +17,7 @@ export function maybeAutoScroll(force){
 export function initScroll(){
   dom.messagesWrap.addEventListener('scroll', function(){
     dom.scrollBtn.classList.toggle('show', !isNearBottom());
-  });
+  }, { passive: true });
   dom.scrollBtn.addEventListener('click', function(){
     dom.messagesWrap.scrollTo({ top: dom.messagesWrap.scrollHeight, behavior: 'smooth' });
   });
