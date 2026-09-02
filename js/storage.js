@@ -1,17 +1,29 @@
-/* ============================= PERSISTENT STORAGE (window.storage) ============================= */
+/* ============================= PERSISTENT STORAGE (localStorage) ============================= */
+// Uses the browser's built-in localStorage so the app works on any real
+// hosting (Netlify, GitHub Pages, your own server, etc). Wrapped in Promises
+// so the rest of the app (which awaits/.then()s these) doesn't need to change.
 import { state } from './state.js';
 
+var PREFIX = 'gemini-sh:';
+
 export function safeGet(key){
-  return window.storage.get(key, false).then(function(res){
-    return res ? res.value : null;
-  }).catch(function(){ return null; });
+  try {
+    var v = localStorage.getItem(PREFIX + key);
+    return Promise.resolve(v);
+  } catch (err) {
+    console.error('storage get failed', key, err);
+    return Promise.resolve(null);
+  }
 }
 
 export function safeSet(key, value){
-  return window.storage.set(key, value, false).catch(function(err){
+  try {
+    localStorage.setItem(PREFIX + key, value);
+    return Promise.resolve(true);
+  } catch (err) {
     console.error('storage set failed', key, err);
-    return null;
-  });
+    return Promise.resolve(null);
+  }
 }
 
 export function persistSettings(){ safeSet('settings', JSON.stringify(state.settings)); }
