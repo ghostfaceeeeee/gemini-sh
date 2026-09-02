@@ -1,0 +1,7 @@
+/* ============================= CODE BLOCKS ============================= */
+.code-block{margin:10px 0;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--surface1);background:var(--crust);}
+.code-block-header{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--surface0);font-size:11px;color:var(--overlay1);}
+.copy-btn{font-size:11px;color:var(--overlay1);padding:2px 8px;border-radius:5px;transition:background var(--t-fast),color var(--t-fast);}
+.copy-btn:hover{background:var(--surface1);color:var(--text);}
+.code-block pre{padding:12px 14px;overflow-x:auto;}
+.code-block code{font-size:12.5px;line-height:1.55;color:var(--text);background:none;padding:0;}

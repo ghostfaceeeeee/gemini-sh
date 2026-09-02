@@ -1,0 +1,14 @@
+/* ============================= APP SHELL ============================= */
+#app{display:flex;height:100vh;height:100dvh;position:relative;}
+.icon-btn{
+  display:flex;align-items:center;justify-content:center;width:32px;height:32px;
+  border-radius:var(--r-sm);color:var(--subtext0);transition:background var(--t-fast),color var(--t-fast);flex:0 0 auto;
+}
+.icon-btn:hover{background:var(--surface0);color:var(--text);}
+.btn{padding:8px 14px;border-radius:var(--r-sm);font-size:12.5px;font-weight:600;transition:background var(--t-fast),color var(--t-fast),opacity var(--t-fast);}
+.btn--primary{background:var(--mauve);color:var(--crust);}
+.btn--primary:hover{background:var(--lavender);}
+.btn--ghost{background:var(--surface0);color:var(--subtext1);border:1px solid var(--surface1);}
+.btn--ghost:hover{background:var(--surface1);}
+.btn--danger{background:rgba(243,139,168,.12);color:var(--red);border:1px solid rgba(243,139,168,.3);white-space:nowrap;}
+.btn--danger:hover{background:rgba(243,139,168,.22);}
