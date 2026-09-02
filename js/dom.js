@@ -35,8 +35,6 @@ export const dom = {
   apiKeyInput: $('apiKeyInput'),
   toggleKeyVisibility: $('toggleKeyVisibility'),
   eyeIcon: $('eyeIcon'),
-  modelSelect: $('modelSelect'),
-  customModelInput: $('customModelInput'),
   saveSettingsBtn: $('saveSettingsBtn'),
   clearAllBtn: $('clearAllBtn'),
 

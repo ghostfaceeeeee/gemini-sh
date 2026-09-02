@@ -1,5 +1,5 @@
 /* ============================= RENDERING: SIDEBAR & MESSAGES ============================= */
-import { state } from './state.js';
+import { state, MODEL } from './state.js';
 import { dom } from './dom.js';
 import { escapeHtml, fmtTime } from './utils.js';
 import { renderMarkdown } from './markdown.js';
@@ -57,7 +57,7 @@ function messageNode(msg, convo){
 export function renderMessages(){
   var convo = getActiveConversation();
   dom.convTitleTop.textContent = convo ? convo.title : '';
-  dom.modelBadgeText.textContent = state.settings.model === 'custom' ? (state.settings.customModel || 'custom') : state.settings.model;
+  dom.modelBadgeText.textContent = MODEL;
 
   if (!convo || !convo.messages.length){
     dom.messages.innerHTML =
@@ -65,7 +65,7 @@ export function renderMessages(){
         '<div class="neofetch__prompt">brian<span class="dim">@</span><span class="accent">gemini</span></div>' +
         '<div class="neofetch__rule">─────────────────────</div>' +
         '<div class="neofetch__row"><span class="neofetch__key">os</span><span class="neofetch__val">gemini.sh v1.0</span></div>' +
-        '<div class="neofetch__row"><span class="neofetch__key">model</span><span class="neofetch__val">' + escapeHtml(state.settings.model === 'custom' ? (state.settings.customModel || '—') : state.settings.model) + '</span></div>' +
+        '<div class="neofetch__row"><span class="neofetch__key">model</span><span class="neofetch__val">' + escapeHtml(MODEL) + '</span></div>' +
         '<div class="neofetch__row"><span class="neofetch__key">theme</span><span class="neofetch__val">Catppuccin Mocha</span></div>' +
         '<div class="neofetch__row"><span class="neofetch__key">font</span><span class="neofetch__val">JetBrains Mono</span></div>' +
         '<div class="neofetch__row"><span class="neofetch__key">chats</span><span class="neofetch__val">' + state.conversations.length + '</span></div>' +
