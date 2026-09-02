@@ -5,7 +5,7 @@ import { uid, showToast } from './utils.js';
 import { getActiveConversation, createConversation } from './conversation.js';
 import { renderSidebar, renderMessages, updateStreamingMessageDOM } from './render.js';
 import { persistConversations } from './storage.js';
-import { currentModelId, streamGemini } from './gemini-api.js';
+import { streamGemini } from './gemini-api.js';
 import { openSettingsModal } from './settings-modal.js';
 import { autoResize } from './input-bar.js';
 
@@ -21,7 +21,7 @@ export function stopGenerating(){
   if (state.abortController) state.abortController.abort();
 }
 
-export function runAssistantTurn(convo, model){
+export function runAssistantTurn(convo){
   state.isStreaming = true;
   updateSendUI();
 
@@ -29,13 +29,13 @@ export function runAssistantTurn(convo, model){
   convo.messages.push(modelMsg);
   renderMessages();
 
-  var contents = convo.messages
-    .filter(function(m){ return (m.role === 'user' || m.role === 'model') && m !== modelMsg; })
-    .map(function(m){ return { role: m.role, parts: [{ text: m.text }] }; });
+  var history = convo.messages.filter(function(m){
+    return (m.role === 'user' || m.role === 'model') && m !== modelMsg;
+  });
 
   state.abortController = new AbortController();
 
-  streamGemini(state.settings.apiKey, model, contents, {
+  streamGemini(state.settings.apiKey, history, {
     signal: state.abortController.signal,
     onChunk: function(fullText){
       modelMsg.text = fullText;
@@ -69,12 +69,6 @@ export function handleSend(){
     showToast('Isi API key Gemini dulu di Settings', 'error');
     return;
   }
-  var model = currentModelId();
-  if (!model){
-    openSettingsModal();
-    showToast('Model belum diisi di Settings', 'error');
-    return;
-  }
 
   var convo = getActiveConversation();
   if (!convo) convo = createConversation(text);
@@ -86,7 +80,7 @@ export function handleSend(){
   renderMessages();
   persistConversations();
 
-  runAssistantTurn(convo, model);
+  runAssistantTurn(convo);
 }
 
 export function regenerate(){
@@ -96,8 +90,7 @@ export function regenerate(){
     convo.messages.pop();
   }
   if (!convo.messages.length) return;
-  var model = currentModelId();
-  if (!model || !state.settings.apiKey){ openSettingsModal(); return; }
+  if (!state.settings.apiKey){ openSettingsModal(); return; }
   renderMessages();
-  runAssistantTurn(convo, model);
+  runAssistantTurn(convo);
 }

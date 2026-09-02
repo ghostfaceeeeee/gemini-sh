@@ -1,5 +1,6 @@
 /* ============================= SETTINGS MODAL ============================= */
-import { state, KNOWN_MODELS } from './state.js';
+// Only the API key is configurable — the model is fixed (see js/state.js).
+import { state } from './state.js';
 import { dom } from './dom.js';
 import { persistSettings, persistConversations } from './storage.js';
 import { renderSidebar, renderMessages } from './render.js';
@@ -7,14 +8,6 @@ import { showToast } from './utils.js';
 
 export function openSettingsModal(){
   dom.apiKeyInput.value = state.settings.apiKey || '';
-  if (KNOWN_MODELS.indexOf(state.settings.model) !== -1){
-    dom.modelSelect.value = state.settings.model;
-    dom.customModelInput.style.display = 'none';
-  } else {
-    dom.modelSelect.value = 'custom';
-    dom.customModelInput.style.display = 'block';
-    dom.customModelInput.value = state.settings.customModel || state.settings.model || '';
-  }
   dom.modalBackdrop.classList.add('show');
 }
 
@@ -29,11 +22,6 @@ export function initSettingsModal(){
     if (e.target === dom.modalBackdrop) closeSettingsModal();
   });
 
-  dom.modelSelect.addEventListener('change', function(){
-    dom.customModelInput.style.display = dom.modelSelect.value === 'custom' ? 'block' : 'none';
-    if (dom.modelSelect.value === 'custom') dom.customModelInput.focus();
-  });
-
   dom.toggleKeyVisibility.addEventListener('click', function(){
     var showing = dom.apiKeyInput.type === 'text';
     dom.apiKeyInput.type = showing ? 'password' : 'text';
@@ -44,13 +32,6 @@ export function initSettingsModal(){
 
   dom.saveSettingsBtn.addEventListener('click', function(){
     state.settings.apiKey = dom.apiKeyInput.value.trim();
-    if (dom.modelSelect.value === 'custom'){
-      state.settings.model = 'custom';
-      state.settings.customModel = dom.customModelInput.value.trim();
-    } else {
-      state.settings.model = dom.modelSelect.value;
-      state.settings.customModel = '';
-    }
     persistSettings();
     renderMessages();
     closeSettingsModal();
@@ -61,12 +42,10 @@ export function initSettingsModal(){
     if (!confirm('Hapus semua chat dan API key yang tersimpan? Tidak bisa dibatalkan.')) return;
     state.conversations = [];
     state.activeId = null;
-    state.settings = { apiKey: '', model: 'gemini-2.5-flash', customModel: '' };
+    state.settings = { apiKey: '' };
     persistConversations();
     persistSettings();
     dom.apiKeyInput.value = '';
-    dom.modelSelect.value = 'gemini-2.5-flash';
-    dom.customModelInput.style.display = 'none';
     renderSidebar();
     renderMessages();
     closeSettingsModal();

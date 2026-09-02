@@ -4,9 +4,9 @@ Klien chat berbasis web untuk Google Gemini API, dengan tampilan terminal ala Ca
 
 ## Fitur
 
-- Chat streaming langsung ke Gemini API (`streamGenerateContent`) dari browser
+- Chat streaming langsung ke Gemini **Interactions API** (`POST /v1beta/interactions`, `stream: true`) dari browser
 - Riwayat percakapan (buat, pilih, hapus) tersimpan otomatis
-- Ganti model (Gemini 2.5 Flash/Pro/Flash-Lite, 3 Flash preview, 3.1 Pro preview, atau model kustom)
+- Model tunggal (`gemini-3.7-flash`, di-hardcode di `js/state.js` — tanpa dropdown pilihan model)
 - Render Markdown ringan: bold, italic, inline code, code block dengan tombol copy, list, dan link
 - Regenerate respons terakhir & stop generating di tengah stream
 - Copy pesan, auto-resize input, auto-scroll, dan sidebar responsif (mobile-friendly)
@@ -39,12 +39,13 @@ Lalu buka `http://localhost:<port>` di browser.
 
 1. Buka aplikasi, klik **Settings**.
 2. Ambil API key gratis di [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey).
-3. Tempel key, pilih model, klik **Save**.
+3. Tempel key, klik **Save**.
 
 ## Catatan
 
 - Data (chat & API key) disimpan di `localStorage` browser — tersimpan per browser/perangkat, tidak sinkron antar perangkat, dan hilang kalau kamu clear browser data.
 - API key Gemini dikirim langsung dari browser ke Google (client-side), jadi **jangan deploy di situs publik yang bisa diakses banyak orang tanpa proteksi tambahan** kalau kamu keberatan orang lain berpotensi melihat trafik jaringan berisi key tersebut.
+- App ini memakai Gemini **Interactions API** (bukan `generateContent`/`streamGenerateContent` lama). Riwayat percakapan dikirim ulang penuh di tiap request (`store: false`) supaya cocok dengan cara app ini menyimpan history secara lokal. Model dikunci ke satu nilai di `export const MODEL` (`js/state.js`) — kalau Google mengganti/mendeprecate nama model itu, cukup ubah nilai konstanta ini.
 
 ## 🛠️ Tech stack
 

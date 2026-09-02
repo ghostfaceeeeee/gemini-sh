@@ -1,17 +1,14 @@
 /* ============================= GLOBAL APP STATE ============================= */
 // Single mutable state object shared (by reference) across every module.
+
+// Only one model is offered — keeping the app simple (no model picker).
+// If Google renames/deprecates this model later, just change it here.
+export const MODEL = "gemini-3.7-flash";
+
 export const state = {
-  settings: { apiKey: "", model: "gemini-2.5-flash", customModel: "" },
+  settings: { apiKey: "" },
   conversations: [],
   activeId: null,
   isStreaming: false,
   abortController: null
 };
-
-export const KNOWN_MODELS = [
-  "gemini-2.5-flash",
-  "gemini-2.5-pro",
-  "gemini-2.5-flash-lite",
-  "gemini-3-flash-preview",
-  "gemini-3.1-pro-preview"
-];

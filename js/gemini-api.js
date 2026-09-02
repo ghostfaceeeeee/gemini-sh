@@ -1,18 +1,42 @@
-/* ============================= GEMINI STREAMING CLIENT ============================= */
-import { state } from './state.js';
+/* ============================= GEMINI STREAMING CLIENT (Interactions API) ============================= */
+// As of mid-2026, Google's REST endpoint for new API keys moved from
+// `models/{model}:streamGenerateContent` to the unified Interactions API
+// (`POST /v1beta/interactions`). Docs: https://ai.google.dev/gemini-api/docs/interactions
+import { MODEL } from './state.js';
 
 export function currentModelId(){
-  return state.settings.model === 'custom' ? (state.settings.customModel || '').trim() : state.settings.model;
+  return MODEL;
 }
 
-export function streamGemini(apiKey, model, contents, opts){
-  var url = 'https://generativelanguage.googleapis.com/v1beta/models/' +
-    encodeURIComponent(model) + ':streamGenerateContent?alt=sse&key=' + encodeURIComponent(apiKey);
+// Turns our locally-stored conversation (array of {role:'user'|'model', text})
+// into the Interactions API's stateless `input` step array. We manage history
+// on the client (matches how this app already stores conversations locally),
+// so every request sends `store: false` and the full turn history — no
+// previous_interaction_id bookkeeping needed.
+function buildInteractionsInput(messages){
+  return messages.map(function(m){
+    if (m.role === 'user'){
+      return { type: 'user_input', content: m.text };
+    }
+    return { type: 'model_output', content: [{ type: 'text', text: m.text }] };
+  });
+}
+
+export function streamGemini(apiKey, messages, opts){
+  var url = 'https://generativelanguage.googleapis.com/v1beta/interactions?alt=sse';
 
   return fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contents: contents }),
+    headers: {
+      'Content-Type': 'application/json',
+      'x-goog-api-key': apiKey
+    },
+    body: JSON.stringify({
+      model: MODEL,
+      store: false,
+      stream: true,
+      input: buildInteractionsInput(messages)
+    }),
     signal: opts.signal
   }).then(function(res){
     if (!res.ok){
@@ -35,23 +59,24 @@ export function streamGemini(apiKey, model, contents, opts){
           var rawEvent = buffer.slice(0, idx);
           buffer = buffer.slice(idx + 2);
           var lines = rawEvent.split('\n');
+          var dataStr = null;
           for (var i = 0; i < lines.length; i++){
-            var line = lines[i];
-            if (line.indexOf('data:') !== 0) continue;
-            var jsonStr = line.slice(5).trim();
-            if (!jsonStr) continue;
-            try {
-              var parsed = JSON.parse(jsonStr);
-              var candidate = parsed && parsed.candidates && parsed.candidates[0];
-              var parts = candidate && candidate.content && candidate.content.parts;
-              if (parts && parts.length){
-                var chunk = parts.map(function(p){ return p.text || ''; }).join('');
-                if (chunk){
-                  fullText += chunk;
-                  opts.onChunk(fullText);
-                }
+            if (lines[i].indexOf('data:') === 0){ dataStr = lines[i].slice(5).trim(); }
+          }
+          if (dataStr){
+            var parsed = null;
+            try { parsed = JSON.parse(dataStr); } catch (e) { /* partial/invalid chunk, skip */ }
+            if (parsed){
+              // Only text deltas from the model's output step matter here;
+              // "thought_signature" deltas (internal reasoning) are skipped.
+              if (parsed.event_type === 'step.delta' && parsed.delta && parsed.delta.type === 'text' && parsed.delta.text){
+                fullText += parsed.delta.text;
+                opts.onChunk(fullText);
+              } else if (parsed.event_type === 'interaction.failed'){
+                var failMsg = (parsed.interaction && parsed.interaction.error && parsed.interaction.error.message) || 'Interaksi gagal.';
+                throw new Error(failMsg);
               }
-            } catch (e) { /* partial/invalid chunk, skip */ }
+            }
           }
         }
         return pump();
