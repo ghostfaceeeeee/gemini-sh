@@ -32,6 +32,7 @@ export const dom = {
   // Settings modal
   modalBackdrop: $('modalBackdrop'),
   modalClose: $('modalClose'),
+  displayNameInput: $('displayNameInput'),
   apiKeyInput: $('apiKeyInput'),
   toggleKeyVisibility: $('toggleKeyVisibility'),
   eyeIcon: $('eyeIcon'),

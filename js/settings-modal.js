@@ -7,6 +7,7 @@ import { renderSidebar, renderMessages } from './render.js';
 import { showToast } from './utils.js';
 
 export function openSettingsModal(){
+  dom.displayNameInput.value = state.settings.displayName || '';
   dom.apiKeyInput.value = state.settings.apiKey || '';
   dom.modalBackdrop.classList.add('show');
 }
@@ -31,8 +32,10 @@ export function initSettingsModal(){
   });
 
   dom.saveSettingsBtn.addEventListener('click', function(){
+    state.settings.displayName = dom.displayNameInput.value.trim() || 'User';
     state.settings.apiKey = dom.apiKeyInput.value.trim();
     persistSettings();
+    renderSidebar();
     renderMessages();
     closeSettingsModal();
     showToast('Settings disimpan', 'success');
@@ -42,9 +45,10 @@ export function initSettingsModal(){
     if (!confirm('Hapus semua chat dan API key yang tersimpan? Tidak bisa dibatalkan.')) return;
     state.conversations = [];
     state.activeId = null;
-    state.settings = { apiKey: '' };
+    state.settings = { apiKey: '', displayName: 'User' };
     persistConversations();
     persistSettings();
+    dom.displayNameInput.value = '';
     dom.apiKeyInput.value = '';
     renderSidebar();
     renderMessages();

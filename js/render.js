@@ -27,8 +27,9 @@ export function renderSidebar(){
 function messageNode(msg, convo){
   var isUser = msg.role === 'user';
   var isError = msg.role === 'error';
-  var avatarLetter = isUser ? 'B' : (isError ? '!' : '✦');
-  var name = isUser ? 'Brian' : (isError ? 'Error' : 'Gemini');
+  var displayName = state.settings.displayName || 'User';
+  var avatarLetter = isUser ? (displayName.charAt(0).toUpperCase() || 'U') : (isError ? '!' : '✦');
+  var name = isUser ? displayName : (isError ? 'Error' : 'Gemini');
   var cls = 'message ' + (isUser ? 'message--user' : (isError ? 'message--error' : 'message--model'));
 
   var isLastModel = !isUser && !isError && convo.messages[convo.messages.length - 1] === msg;
@@ -62,7 +63,7 @@ export function renderMessages(){
   if (!convo || !convo.messages.length){
     dom.messages.innerHTML =
       '<div class="neofetch">' +
-        '<div class="neofetch__prompt">brian<span class="dim">@</span><span class="accent">gemini</span></div>' +
+        '<div class="neofetch__prompt">' + escapeHtml((state.settings.displayName || 'user').toLowerCase()) + '<span class="dim">@</span><span class="accent">gemini</span></div>' +
         '<div class="neofetch__rule">─────────────────────</div>' +
         '<div class="neofetch__row"><span class="neofetch__key">os</span><span class="neofetch__val">gemini.sh v1.0</span></div>' +
         '<div class="neofetch__row"><span class="neofetch__key">model</span><span class="neofetch__val">' + escapeHtml(MODEL) + '</span></div>' +

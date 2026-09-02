@@ -2,17 +2,18 @@
 
 Klien chat berbasis web untuk Google Gemini API, dengan tampilan terminal ala Catppuccin Mocha. Dibangun murni dengan HTML, CSS, dan JavaScript (ES Modules) — tanpa framework atau proses build.
 
-## Fitur
+## ✨ Fitur
 
 - Chat streaming langsung ke Gemini **Interactions API** (`POST /v1beta/interactions`, `stream: true`) dari browser
 - Riwayat percakapan (buat, pilih, hapus) tersimpan otomatis
 - Model tunggal (`gemini-3.7-flash`, di-hardcode di `js/state.js` — tanpa dropdown pilihan model)
+- Nama tampilan bisa diganti sendiri lewat Settings (tersimpan lokal, bukan akun/login sungguhan)
 - Render Markdown ringan: bold, italic, inline code, code block dengan tombol copy, list, dan link
 - Regenerate respons terakhir & stop generating di tengah stream
 - Copy pesan, auto-resize input, auto-scroll, dan sidebar responsif (mobile-friendly)
 - API key Gemini dikirim langsung ke Google — tidak lewat server perantara
 
-## Struktur project
+## 📂 Struktur proyek
 
 ```
 gemini-sh/
@@ -21,7 +22,7 @@ gemini-sh/
 └── js/                 # ES Modules per tanggung jawab (state, dom, render, api, dst.)
 ```
 
-## Menjalankan secara lokal
+## 🚀 Menjalankan secara lokal
 
 Karena `index.html` memuat `js/main.js` sebagai ES Module, file **tidak bisa** dibuka langsung lewat `file://` (akan diblokir CORS oleh browser). Jalankan lewat server statis, misalnya:
 
@@ -35,13 +36,13 @@ python3 -m http.server 8080
 
 Lalu buka `http://localhost:<port>` di browser.
 
-## Setup
+## 🔑 Setup
 
 1. Buka aplikasi, klik **Settings**.
 2. Ambil API key gratis di [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey).
 3. Tempel key, klik **Save**.
 
-## Catatan
+## ⚠️ Catatan
 
 - Data (chat & API key) disimpan di `localStorage` browser — tersimpan per browser/perangkat, tidak sinkron antar perangkat, dan hilang kalau kamu clear browser data.
 - API key Gemini dikirim langsung dari browser ke Google (client-side), jadi **jangan deploy di situs publik yang bisa diakses banyak orang tanpa proteksi tambahan** kalau kamu keberatan orang lain berpotensi melihat trafik jaringan berisi key tersebut.
