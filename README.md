@@ -2,6 +2,10 @@
 
 Klien chat berbasis web untuk Google Gemini API, dengan tampilan terminal ala Catppuccin Mocha. Dibangun murni dengan HTML, CSS, dan JavaScript (ES Modules) — tanpa framework atau proses build.
 
+<p align="center">
+  <img src="assets/screenshots/preview.png" width="100%" alt="gemini.sh Preview" style="border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.3);" />
+</p>
+
 ## ✨ Fitur
 
 - Chat streaming langsung ke Gemini **Interactions API** (`POST /v1beta/interactions`, `stream: true`) dari browser
