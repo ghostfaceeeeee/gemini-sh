@@ -56,7 +56,7 @@ Lalu buka `http://localhost:<port>` di browser.
 - App ini memakai Gemini **Interactions API** (bukan `generateContent`/`streamGenerateContent` lama). Riwayat percakapan dikirim ulang penuh di tiap request (`store: false`) supaya cocok dengan cara app ini menyimpan history secara lokal. Model dikunci ke satu nilai di `export const MODEL` (`js/state.js`) — kalau Google mengganti/mendeprecate nama model itu, cukup ubah nilai konstanta ini.
 - Lampiran (gambar/PDF/teks) ikut disimpan dalam riwayat chat di `localStorage`, sebagai base64. Ini boros ruang — kuota `localStorage` browser biasanya cuma 5–10MB per situs, jadi chat dengan banyak gambar bisa cepat penuh. Gambar sudah dikompres otomatis (maks ~1568px, JPEG kualitas 82%) untuk menghemat sedikit, tapi kalau kamu butuh riwayat chat besar dengan banyak lampiran secara reguler, pertimbangkan migrasi penyimpanan ke backend/cloud storage.
 
-## 🛠️ Tech stack
+## Tech stack
 
 - Vanilla JavaScript (ES Modules)
 - CSS custom properties (tema Catppuccin Mocha)
